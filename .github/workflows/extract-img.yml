@@ -86,8 +86,8 @@ jobs:
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
-        (cd boot && tar cfz ../img/${{ inputs.rename }}-boot.tar.gz *)
-        (cd rootfs && tar cfz ../img/${{ inputs.rename }}-rootfs.tar.gz *)
+        (cd boot && sudo tar cfz ../img/${{ inputs.rename }}-boot.tar.gz *)
+        (cd rootfs && sudo tar cfz ../img/${{ inputs.rename }}-rootfs.tar.gz *)
         echo "PACKAGED_OUTPUTTAGS=${{ inputs.rename }}" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTPATH=./img" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTDATE=$(date +"%m.%d.%H%M")" >> ${GITHUB_ENV}
