@@ -78,8 +78,6 @@ jobs:
       id: extract
       run: |
         mkdir -p boot rootfs img
-        ls -l
-        pwd
         if [ ${{ inputs.type_file }} = "img.gz" ]; then
           gunzip file.img.gz
         else
