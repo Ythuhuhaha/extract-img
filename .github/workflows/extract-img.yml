@@ -73,10 +73,14 @@ jobs:
             fi
           fi
         fi
+        ls
+        pwd
 
     - name: Extract firmware
       id: extract
       run: |
+        ls
+        pwd
         mkdir -p boot rootfs img
         if [ ${{ inputs.type_file }} = "img.gz" ]; then
           gunzip file.img.gz
