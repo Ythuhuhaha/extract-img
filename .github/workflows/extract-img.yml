@@ -50,11 +50,8 @@ jobs:
         megacmd_ver=$(sudo cat /etc/*ease | grep "DISTRIB_RELEASE" | awk -F "=" '{print $2}')
         wget https://mega.nz/linux/repo/xUbuntu_${megacmd_ver}/amd64/megacmd-xUbuntu_${megacmd_ver}_amd64.deb && sudo apt install "$PWD/megacmd-xUbuntu_${megacmd_ver}_amd64.deb"
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir/openwrt
-        sudo chown $USER:$GROUPS /workdir
 
     - name: Download file ${{ inputs.type_file }}
-      working-directory: /workdir
       run: |
         df -hT $PWD
         if [ $(echo ${{ inputs.img_url }} | grep "drive.") ]; then
@@ -63,36 +60,34 @@ jobs:
           else
             link_gdrive=$(echo ${{ inputs.img_url }} | awk -F "/" '{print $4}' | awk -F "?id=" '{print $2}'|awk -F "&export" '{print $1}')
           fi
-          sudo gdown ${link_gdrive} -O openwrt/file.${{ inputs.type_file }}
+          gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            sudo mediafire-dl ${{ inputs.img_url }} -o openwrt/file.${{ inputs.type_file }}
+            mediafire-dl ${{ inputs.img_url }} -o file.${{ inputs.type_file }}
           else
             if [ $(echo ${{ inputs.img_url }} | grep "mega.nz") ]; then
-              file_mega=$(sudo mega-get ${{ inputs.img_url }} | awk -F: '{print $2}')
-              sudo mv ${file_mega} openwrt/file.${{ inputs.type_file }}
+              file_mega=$(mega-get ${{ inputs.img_url }} | awk -F: '{print $2}')
+              mv ${file_mega} file.${{ inputs.type_file }}
             else
-              sudo wget --no-check-certificate ${{ inputs.img_url }} -O openwrt/file.${{ inputs.type_file }}
+              wget --no-check-certificate ${{ inputs.img_url }} -O file.${{ inputs.type_file }}
             fi
           fi
         fi
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
       id: extract
       run: |
-        cd openwrt
-        sudo mkdir -p boot rootfs img
+        mkdir -p boot rootfs img
         if [ ${{ inputs.type_file }} = "img.gz" ]; then
-          sudo gunzip file.img.gz
+          gunzip file.img.gz
         else
-          sudo unxz file.img.xz
+          unxz file.img.xz
         fi
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
-        (cd boot && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename }}-boot.tar.gz *)
-        (cd rootfs && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename }}-rootfs.tar.gz *)
+        (cd boot && tar cfz img/${{ inputs.rename }}-boot.tar.gz *)
+        (cd rootfs && tar cfz img/${{ inputs.rename }}-rootfs.tar.gz *)
         echo "PACKAGED_OUTPUTTAGS=${{ inputs.rename }}" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTPATH=/workdir/openwrt/img" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTDATE=$(date +"%m.%d.%H%M")" >> ${GITHUB_ENV}
@@ -103,14 +98,14 @@ jobs:
       if: env.PACKAGED_STATUS == 'success'
       with:
         name: ${{ inputs.rename }}-boot.tar.gz
-        path: /workdir/openwrt/img/${{ inputs.rename }}-boot.tar.gz
+        path: img/${{ inputs.rename }}-boot.tar.gz
 
     - name: Upload ${{ inputs.rename }}-rootfs.tar.gz
       uses: actions/upload-artifact@main
       if: env.PACKAGED_STATUS == 'success'
       with:
         name: ${{ inputs.rename }}-rootfs.tar.gz
-        path: /workdir/openwrt/img/${{ inputs.rename }}-rootfs.tar.gz
+        path: img/${{ inputs.rename }}-rootfs.tar.gz
 
     - name: Delivering Package
       uses: actions/upload-artifact@v4
