@@ -31,6 +31,8 @@ env:
 
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     steps:
@@ -112,7 +114,7 @@ jobs:
       if: env.PACKAGED_STATUS == 'success'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./img/${{ inputs.rename }}-rootfs.tar.gz
+        file: ${{ env.PACKAGED_OUTPUTPATH }}
         tag: ${{ env.PACKAGED_OUTPUTDATE }}
         file_glob: true
         overwrite: true
