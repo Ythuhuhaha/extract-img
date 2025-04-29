@@ -112,7 +112,9 @@ jobs:
       if: env.PACKAGED_STATUS == 'success'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ env.PACKAGED_OUTPUTPATH }}
+        file: |
+          ./img/${{ inputs.rename }}-boot.tar.gz
+          ./img/${{ inputs.rename }}-rootfs.tar.gz
         tag: ${{ env.PACKAGED_OUTPUTDATE }}
         file_glob: true
         overwrite: true
