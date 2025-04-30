@@ -49,7 +49,7 @@ jobs:
         sudo -E apt-get -qq clean
         pip3 install gdown
         git clone https://github.com/NicKoehler/mediafire_bulk_downloader.git
-        (cd mediafire_bulk_downloader && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 setup.py)
+        (cd mediafire_bulk_downloader && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt)
         # pip3 install git+https://github.com/NicKoehler/mediafire_bulk_downloader.git
         megacmd_ver=$(sudo cat /etc/*ease | grep "DISTRIB_RELEASE" | awk -F "=" '{print $2}')
         wget https://mega.nz/linux/repo/xUbuntu_${megacmd_ver}/amd64/megacmd-xUbuntu_${megacmd_ver}_amd64.deb && sudo apt install "$PWD/megacmd-xUbuntu_${megacmd_ver}_amd64.deb"
@@ -67,7 +67,7 @@ jobs:
           gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            mediafire ${{ inputs.img_url }} -o file.${{ inputs.type_file }}
+            python3 mediafire_bulk_downloader/mediafire.py ${{ inputs.img_url }} -o file.${{ inputs.type_file }}
           else
             if [ $(echo ${{ inputs.img_url }} | grep "mega.nz") ]; then
               file_mega=$(mega-get ${{ inputs.img_url }} | awk -F: '{print $2}')
