@@ -48,7 +48,7 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         pip3 install gdown
-        git clone git clone https://github.com/NicKoehler/mediafire_bulk_downloader.git
+        git clone https://github.com/NicKoehler/mediafire_bulk_downloader.git
         (cd cd mediafire_bulk_downloader && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 setup.py)
         # pip3 install git+https://github.com/NicKoehler/mediafire_bulk_downloader.git
         megacmd_ver=$(sudo cat /etc/*ease | grep "DISTRIB_RELEASE" | awk -F "=" '{print $2}')
