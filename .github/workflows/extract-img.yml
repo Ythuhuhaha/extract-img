@@ -48,7 +48,8 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo pip3 install gdown
-        sudo pip3 install git+https://github.com/NicKoehler/mediafire_bulk_downloader.git
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        cargo install mediafire_rs
         megacmd_ver=$(sudo cat /etc/*ease | grep "DISTRIB_RELEASE" | awk -F "=" '{print $2}')
         wget https://mega.nz/linux/repo/xUbuntu_${megacmd_ver}/amd64/megacmd-xUbuntu_${megacmd_ver}_amd64.deb && sudo apt install "$PWD/megacmd-xUbuntu_${megacmd_ver}_amd64.deb"
         sudo timedatectl set-timezone "$TZ"
@@ -65,7 +66,7 @@ jobs:
           gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            mediafire ${{ inputs.img_url }} -t $(nproc)
+            mdrs ${{ inputs.img_url }} -t $(nproc)
             ls -l 
             mv *.${{ inputs.type_file }} file.${{ inputs.type_file }}
           else
