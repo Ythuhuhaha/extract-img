@@ -17,6 +17,8 @@ on:
         options:
           - img.xz
           - img.gz
+          - img.tar.xz
+          - img.tar.gz
       img_url:
         description: "Set the url img file"
         required: true
