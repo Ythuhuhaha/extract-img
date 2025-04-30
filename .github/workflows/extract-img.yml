@@ -62,16 +62,16 @@ jobs:
           else
             link_gdrive=$(echo ${{ inputs.img_url }} | awk -F "/" '{print $4}' | awk -F "?id=" '{print $2}'|awk -F "&export" '{print $1}')
           fi
-          gdown ${link_gdrive} -O file.${{ inputs.type_file }}
+          sudo gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            mediafire "${{ inputs.img_url }}" -o file.${{ inputs.type_file }}
+            sudo mediafire ${{ inputs.img_url }} -o file.${{ inputs.type_file }}
           else
             if [ $(echo ${{ inputs.img_url }} | grep "mega.nz") ]; then
-              file_mega=$(mega-get ${{ inputs.img_url }} | awk -F: '{print $2}')
+              file_mega=$(sudo mega-get ${{ inputs.img_url }} | awk -F: '{print $2}')
               mv ${file_mega} file.${{ inputs.type_file }}
             else
-              wget --no-check-certificate ${{ inputs.img_url }} -O file.${{ inputs.type_file }}
+              sudo wget --no-check-certificate ${{ inputs.img_url }} -O file.${{ inputs.type_file }}
             fi
           fi
         fi
