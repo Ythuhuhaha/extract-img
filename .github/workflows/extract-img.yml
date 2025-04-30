@@ -65,8 +65,7 @@ jobs:
           gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            mdrs ${{ inputs.img_url }}
-            mv *.${{ inputs.type_file }} file.${{ inputs.type_file }}
+            mdrs ${{ inputs.img_url }} -o file.${{ inputs.type_file }}
           else
             if [ $(echo ${{ inputs.img_url }} | grep "mega.nz") ]; then
               file_mega=$(mega-get ${{ inputs.img_url }} | awk -F: '{print $2}')
