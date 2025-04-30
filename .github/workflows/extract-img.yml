@@ -87,8 +87,14 @@ jobs:
         mkdir -p boot rootfs img
         if [ ${{ inputs.type_file }} = "img.gz" ]; then
           gunzip file.img.gz
-        else
+        elif [ ${{ inputs.type_file }} = "img.xz" ]; then
           unxz file.img.xz
+        elif [ ${{ inputs.type_file }} = "img.tar.gz" ]; then
+          gunzip file.img.tar.gz
+          tar xf file.img.tar
+        elif [ ${{ inputs.type_file }} = "img.tar.xz" ]; then
+          unxz file.img.tar.xz
+          tar xf file.img.tar
         fi
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p1 boot
