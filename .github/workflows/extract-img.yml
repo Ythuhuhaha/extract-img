@@ -44,11 +44,11 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo -E apt-get -qq update
-        sudo -E apt-get -y install wget python3
+        sudo -E apt-get -y install wget python3 rust
+        sudo -E rust install mediafire_rs
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         pip3 install gdown
-        pip3 install git+https://github.com/NicKoehler/mediafire_bulk_downloader.git
         megacmd_ver=$(sudo cat /etc/*ease | grep "DISTRIB_RELEASE" | awk -F "=" '{print $2}')
         wget https://mega.nz/linux/repo/xUbuntu_${megacmd_ver}/amd64/megacmd-xUbuntu_${megacmd_ver}_amd64.deb && sudo apt install "$PWD/megacmd-xUbuntu_${megacmd_ver}_amd64.deb"
         sudo timedatectl set-timezone "$TZ"
@@ -65,7 +65,7 @@ jobs:
           gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            mediafire ${{ inputs.img_url }}
+            mdrs ${{ inputs.img_url }}
             mv *.${{ inputs.type_file }} file.${{ inputs.type_file }}
           else
             if [ $(echo ${{ inputs.img_url }} | grep "mega.nz") ]; then
