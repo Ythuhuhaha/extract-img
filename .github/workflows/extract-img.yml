@@ -65,7 +65,7 @@ jobs:
           gdown ${link_gdrive} -O file.${{ inputs.type_file }}
         else
           if [ $(echo ${{ inputs.img_url }} | grep "mediafire.com") ]; then
-            mediafire ${{ inputs.img_url }}
+            mediafire ${{ inputs.img_url }} -t $(nproc)
             ls -l 
             mv *.${{ inputs.type_file }} file.${{ inputs.type_file }}
           else
