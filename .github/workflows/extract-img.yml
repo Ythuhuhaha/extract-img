@@ -44,11 +44,10 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo -E apt-get -qq update
-        sudo -E apt-get -y install wget python3
+        sudo -E apt-get -y install wget python3 rustup
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         pip3 install gdown
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh | yes
         cargo install mediafire_rs
         # pip3 install git+https://github.com/NicKoehler/mediafire_bulk_downloader.git
         megacmd_ver=$(sudo cat /etc/*ease | grep "DISTRIB_RELEASE" | awk -F "=" '{print $2}')
